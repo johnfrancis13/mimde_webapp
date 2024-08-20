@@ -10,6 +10,7 @@ require '../src/db/connection.php';
 $tsql = "WITH RandomQnum AS (
     SELECT DISTINCT TOP 2 qnum
     FROM dbo.test_annotations_draft
+    WHERE annotators < 3 
     ORDER BY NEWID()
 ),
 RandomResponses AS (
