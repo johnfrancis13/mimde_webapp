@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 require '../src/db/connection.php';
 
 $tsql = "WITH RandomQnum AS (
-    SELECT DISTINCT TOP 2 qnum, , NEWID() as random_id
+    SELECT DISTINCT TOP 2 qnum, NEWID() as random_id
     FROM dbo.test_annotations_draft
     WHERE annotators < 3 
     ORDER BY random_id
