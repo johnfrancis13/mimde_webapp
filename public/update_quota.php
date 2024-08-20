@@ -1,14 +1,27 @@
 <?php
 require '../src/db/connection.php';
 
-$textID = $_POST['TextID'];
-$sql = "UPDATE test1 SET annotators = annotators + 1 WHERE id = $id";
+// Get the JSON data from the POST request
+$data = json_decode(file_get_contents('php://input'), true);
+$ids = $data['ids'];
 
-if ($conn->query($sql) === TRUE) {
-    echo "Record updated successfully";
+$sql = "UPDATE test1 SET annotators = annotators + 1 WHERE id = ?";
+
+// Initialize a prepared statement
+$stmt = $conn->prepare($sql);
+
+if ($stmt) {
+    // Loop through each ID and execute the prepared statement
+    foreach ($ids as $id) {
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+    echo "Records updated successfully";
 } else {
-    echo "Error updating record: " . $conn->error;
+    echo "Error preparing statement: " . $conn->error;
 }
 
+// Close the statement and connection
+$stmt->close();
 $conn->close();
 ?>
