@@ -7,10 +7,16 @@ header('Content-Type: application/json');
 // Include the database connection file
 require '../src/db/connection.php';
 
-$tsql = "WITH RandomQnum AS (
-    SELECT DISTINCT TOP 2 qnum, NEWID() as random_id
+$tsql = "WITH GroupedRandom AS (
+    SELECT id, response, qnum, mcq,
+           ROW_NUMBER() OVER (PARTITION BY qnum ORDER BY NEWID()) as rn
     FROM dbo.test_annotations_draft
-    WHERE annotators < 3 
+    WHERE annotators < 3
+), 
+RandomQnum AS (
+    SELECT DISTINCT TOP 2 qnum, NEWID() as random_id
+    FROM GroupedRandom
+    WHERE rn = 1
     ORDER BY random_id
 ),
 RandomResponses AS (
