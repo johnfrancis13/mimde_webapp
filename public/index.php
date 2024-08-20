@@ -2,10 +2,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+echo "Hello World!";
+
 // Include the database connection file
 require '../src/db/connection.php';
-
-
 
 $sql = "SELECT id, response,qnum,mcq FROM dbo.test_annotations_draft WHERE annotators < 3 LIMIT 10";
 $result = $conn->query($sql);
