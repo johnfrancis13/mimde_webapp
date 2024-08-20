@@ -21,7 +21,7 @@ RandomResponses AS (
 SELECT id, response, qnum, mcq
 FROM RandomResponses
 WHERE rn <= 5
-ORDER BY qnum, rn;
+ORDER BY qnum;
 ";
 
 $getResults= sqlsrv_query($conn, $tsql);
