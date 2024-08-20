@@ -12,7 +12,7 @@ $sql = "UPDATE dbo.test_annotations_draft SET annotators = annotators + 1 WHERE 
 
 // Loop through each ID and execute the prepared statement
 foreach ($ids as $id) {
-    $params = array($id);
+    params = array(array($id, SQLSRV_PARAM_IN));
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     if ($stmt === false) {
