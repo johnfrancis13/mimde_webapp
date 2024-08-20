@@ -7,7 +7,23 @@ header('Content-Type: application/json');
 // Include the database connection file
 require '../src/db/connection.php';
 
-$tsql= "SELECT TOP 10 id, response,qnum,mcq FROM dbo.test_annotations_draft WHERE annotators < 3 ORDER BY NEWID()";
+$tsql = "WITH RandomQnum AS (
+    SELECT DISTINCT TOP 2 qnum
+    FROM dbo.test_annotations_draft
+    ORDER BY NEWID()
+),
+RandomResponses AS (
+    SELECT id, response, qnum, mcq,
+           ROW_NUMBER() OVER (PARTITION BY qnum ORDER BY NEWID()) as rn
+    FROM dbo.test_annotations_draft
+    WHERE annotators < 3 AND qnum IN (SELECT qnum FROM RandomQnum)
+)
+SELECT id, response, qnum, mcq
+FROM RandomResponses
+WHERE rn <= 5;
+ORDER BY qnum
+";
+
 $getResults= sqlsrv_query($conn, $tsql);
 // echo ("Reading data from table" . PHP_EOL);
 
