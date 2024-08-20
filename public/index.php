@@ -7,7 +7,7 @@ echo "Hello World!";
 // Include the database connection file
 require '../src/db/connection.php';
 
-$sql = "SELECT id, response,qnum,mcq FROM dbo.test_annotations_draft WHERE annotators < 3 LIMIT 10";
+$sql = "SELECT TOP 10 id, response,qnum,mcq FROM dbo.test_annotations_draft WHERE annotators < 3 ORDER BY NEWID();
 $result = $conn->query($sql);
 ?>
 
