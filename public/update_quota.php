@@ -7,12 +7,14 @@ require '../src/db/connection.php';
 // Get the JSON data from the POST request
 $data = json_decode(file_get_contents('php://input'), true);
 $ids = $data['ids'];
+$qnums = $data['qnums'];
 
-$sql = "UPDATE dbo.test_annotations_draft SET annotators = annotators + 1 WHERE id = ?";
+$sql = "UPDATE dbo.test_annotations_draft SET annotators = annotators + 1 WHERE id = ? and qnum = ?";
 
-// Loop through each ID and execute the prepared statement
-foreach ($ids as $id) {
-    $params = array(array($id, SQLSRV_PARAM_IN));
+// Loop through each ID and QNUM and execute the prepared statement
+foreach ($ids as $index => $id) {
+    $qnum = $qnums[$index];
+    $params = array($id, $qnum);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     if ($stmt === false) {
