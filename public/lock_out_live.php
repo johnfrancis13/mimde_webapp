@@ -9,9 +9,9 @@ $data = json_decode(file_get_contents('php://input'), true);
 $ids = $data['ids'];
 $qnums = $data['qnums'];
 
-$sql = "UPDATE dbo.final_annotation_db SET annotators = annotators + 1 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.final_annotation_db SET live = 1 WHERE id = ? and qnum = ?";
 
-// Loop through each ID and QNUM and execute the prepared statement (increase annotators)
+// Loop through each ID and QNUM and execute the prepared statement (lock out live ids)
 foreach ($ids as $index => $id) {
     $qnum = $qnums[$index];
     $params = array($id, $qnum);
@@ -22,9 +22,9 @@ foreach ($ids as $index => $id) {
     }
 }
 
-$sql = "UPDATE dbo.final_annotation_db SET live = 0 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.final_annotation_db SET locktime = GETDATE() WHERE id = ? and qnum = ?";
 
-// Loop through each ID and QNUM and execute the prepared statement (release the live flag)
+// Loop through each ID and QNUM and execute the prepared statement (set the time the ids were locked out)
 foreach ($ids as $index => $id) {
     $qnum = $qnums[$index];
     $params = array($id, $qnum);
@@ -34,7 +34,6 @@ foreach ($ids as $index => $id) {
         die(print_r(sqlsrv_errors(), true));
     }
 }
-
 
 echo "Records updated successfully";
 
