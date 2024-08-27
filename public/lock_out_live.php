@@ -8,13 +8,15 @@ require '../src/db/connection.php';
 $data = json_decode(file_get_contents('php://input'), true);
 $ids = $data['ids'];
 $qnums = $data['qnums'];
+$mcqs = $data['mcqs'];
 
-$sql = "UPDATE dbo.final_annotation_db SET live = 1 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.final_annotation_db SET live = 1 WHERE id = ? AND qnum = ? AND mcq = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (lock out live ids)
 foreach ($ids as $index => $id) {
     $qnum = $qnums[$index];
-    $params = array($id, $qnum);
+    $mcq = $mcqs[$index];
+    $params = array($id, $qnum,$mcq);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     if ($stmt === false) {
@@ -22,12 +24,13 @@ foreach ($ids as $index => $id) {
     }
 }
 
-$sql = "UPDATE dbo.final_annotation_db SET locktime = GETDATE() WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.final_annotation_db SET locktime = GETDATE() WHERE id = ? AND qnum = ? AND mcq = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (set the time the ids were locked out)
 foreach ($ids as $index => $id) {
     $qnum = $qnums[$index];
-    $params = array($id, $qnum);
+    $mcq = $mcqs[$index];
+    $params = array($id, $qnum,$mcq);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     if ($stmt === false) {
