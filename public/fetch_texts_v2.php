@@ -44,6 +44,36 @@ while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
 }
 
 
+// Now do the lockout
+$ids = $data['id'];
+$qnums = $data['qnum'];
+
+$sqla = "UPDATE dbo.final_annotation_db SET live = 1 WHERE id = ? AND qnum = ?";
+
+// Loop through each ID and QNUM and execute the prepared statement (lock out live ids)
+foreach ($ids as $index => $id) {
+    $qnum = $qnums[$index];
+    $params = array($id, $qnum);
+    $stmt = sqlsrv_query($conn, $sqla, $params);
+
+    if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true));
+    }
+}
+
+$sqlb = "UPDATE dbo.final_annotation_db SET locktime = GETDATE() WHERE id = ? AND qnum = ? AND mcq = ?";
+
+// Loop through each ID and QNUM and execute the prepared statement (set the time the ids were locked out)
+foreach ($ids as $index => $id) {
+    $qnum = $qnums[$index];
+    $params = array($id, $qnum);
+    $stmt = sqlsrv_query($conn, $sqlb, $params);
+
+    if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true));
+    }
+}
+
 // Encode the array to JSON and output it
 echo json_encode($data);
 
