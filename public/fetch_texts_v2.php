@@ -10,7 +10,7 @@ require '../src/db/connection.php';
 $tsql = "WITH GroupedRandom AS (
     SELECT id, response, qnum, mcq,
            ROW_NUMBER() OVER (PARTITION BY qnum ORDER BY NEWID()) as rn
-    FROM dbo.test_annotations_draft_v3
+    FROM dbo.final_annotation_db
     WHERE annotators < 3  AND (live = 0 OR locktime < DATEADD(minute, -30, GETDATE()))
 ), 
 RandomQnum AS (
@@ -22,7 +22,7 @@ RandomQnum AS (
 RandomResponses AS (
     SELECT id, response, qnum, mcq,
            ROW_NUMBER() OVER (PARTITION BY qnum ORDER BY NEWID()) as rn
-    FROM dbo.test_annotations_draft_v3
+    FROM dbo.final_annotation_db
     WHERE annotators < 3  AND (live = 0 OR locktime < DATEADD(minute, -30, GETDATE())) AND qnum IN (SELECT qnum FROM RandomQnum)
 )
 SELECT id, response, qnum, mcq
@@ -46,8 +46,8 @@ while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
 
 // Now do the lockout
 
-$sqla = "UPDATE dbo.test_annotations_draft_v3 SET live = 1 WHERE id = ? AND qnum = ?";
-$sqlb = "UPDATE dbo.test_annotations_draft_v3 SET locktime = GETDATE() WHERE id = ? AND qnum = ?";
+$sqla = "UPDATE dbo.final_annotation_db SET live = 1 WHERE id = ? AND qnum = ?";
+$sqlb = "UPDATE dbo.final_annotation_db SET locktime = GETDATE() WHERE id = ? AND qnum = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (lock out live ids)
 foreach ($data as $row) {

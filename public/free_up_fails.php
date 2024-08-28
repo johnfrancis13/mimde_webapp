@@ -9,7 +9,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $ids = $data['ids'];
 $qnums = $data['qnums'];
 
-$sql = "UPDATE dbo.test_annotations_draft_v3 SET live = 0 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.final_annotation_db SET live = 0 WHERE id = ? and qnum = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (lock out live ids)
 foreach ($ids as $index => $id) {
