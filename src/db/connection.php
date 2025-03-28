@@ -1,7 +1,7 @@
 <?php
-$serverName = "mimde.database.windows.net"; // update me
+$serverName = "ati-bias.database.windows.net"; // update me
 $connectionOptions = array(
-    "Database" => "mimde_qualtrics", // update me
+    "Database" => "ati-bias", // update me
     "Uid" => "ai4ps_mimde", // update me
     "PWD" => "what_is_yasp_123" // update me
 );

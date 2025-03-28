@@ -9,7 +9,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $ids = $data['ids'];
 $qnums = $data['qnums'];
 
-$sql = "UPDATE dbo.final_annotation_db SET annotators = annotators + 1 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.bias_annotation_data_file SET annotators = annotators + 1 WHERE id = ? and qnum = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (increase annotators)
 foreach ($ids as $index => $id) {
@@ -22,7 +22,7 @@ foreach ($ids as $index => $id) {
     }
 }
 
-$sql = "UPDATE dbo.final_annotation_db SET live = 0 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.bias_annotation_data_file SET live = 0 WHERE id = ? and qnum = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (release the live flag)
 foreach ($ids as $index => $id) {

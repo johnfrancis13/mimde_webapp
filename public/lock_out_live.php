@@ -10,7 +10,7 @@ $ids = $data['ids'];
 $qnums = $data['qnums'];
 $mcqs = $data['mcqs'];
 
-$sql = "UPDATE dbo.final_annotation_db SET live = 1 WHERE id = ? AND qnum = ? AND mcq = ?";
+$sql = "UPDATE dbo.bias_annotation_data_file SET live = 1 WHERE id = ? AND qnum = ? AND mcq = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (lock out live ids)
 foreach ($ids as $index => $id) {
@@ -24,7 +24,7 @@ foreach ($ids as $index => $id) {
     }
 }
 
-$sql = "UPDATE dbo.final_annotation_db SET locktime = GETDATE() WHERE id = ? AND qnum = ? AND mcq = ?";
+$sql = "UPDATE dbo.bias_annotation_data_file SET locktime = GETDATE() WHERE id = ? AND qnum = ? AND mcq = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement (set the time the ids were locked out)
 foreach ($ids as $index => $id) {
