@@ -9,7 +9,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $ids = $data['ids'];
 $qnums = $data['qnums'];
 
-$sql = "UPDATE dbo.test_annotations_draft SET annotators = annotators + 1 WHERE id = ? and qnum = ?";
+$sql = "UPDATE dbo.final_annotation_table SET annotators = annotators + 1 WHERE id = ? and qnum = ?";
 
 // Loop through each ID and QNUM and execute the prepared statement
 foreach ($ids as $index => $id) {

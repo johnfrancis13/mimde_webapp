@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 require '../src/db/connection.php';
 
-$sql = "SELECT id, response,qnum,mcq FROM dbo.test_annotations_draft WHERE annotators < 3 LIMIT 10";
+$sql = "SELECT id, response,qnum,mcq FROM dbo.final_annotation_table WHERE annotators < 3 LIMIT 10";
 $result = $conn->query($sql);
 
 $data = array();

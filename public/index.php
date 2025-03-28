@@ -10,7 +10,7 @@ require '../src/db/connection.php';
 $tsql = "WITH GroupedRandom AS (
     SELECT id, response, qnum, mcq,
            ROW_NUMBER() OVER (PARTITION BY qnum ORDER BY NEWID()) as rn
-    FROM dbo.test_annotations_draft
+    FROM dbo.final_annotation_table
     WHERE annotators < 3
 ), 
 RandomQnum AS (
@@ -22,7 +22,7 @@ RandomQnum AS (
 RandomResponses AS (
     SELECT id, response, qnum, mcq,
            ROW_NUMBER() OVER (PARTITION BY qnum ORDER BY NEWID()) as rn
-    FROM dbo.test_annotations_draft
+    FROM dbo.final_annotation_table
     WHERE annotators < 3 AND qnum IN (SELECT qnum FROM RandomQnum)
 )
 SELECT id, response, qnum, mcq
